@@ -40,10 +40,10 @@ public record ClientHandler(Socket clientSocket) implements Runnable {
         clientOutput.write("\r\n".getBytes());
 
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
-            int data;
-            byte[] buffer = new byte[fileInputStream.available()];
-            while ((data = fileInputStream.read(buffer, 0, buffer.length)) != -1) {
-                clientOutput.write(new String(buffer, 0, data).getBytes());
+            int bytesRead;
+            byte[] buffer = new byte[1024];
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                clientOutput.write(buffer, 0, bytesRead);
             }
         }
         clientOutput.flush();
