@@ -40,7 +40,7 @@ public class Router {
         }
     }
 
-    public void createUser(final String param) throws UnsupportedEncodingException {
+    public void createUser(final String param) {
         String[] params = HttpParser.parseParam(URLDecoder.decode(param, StandardCharsets.UTF_8));
         Map<String, String> paramMap = HttpParser.parseParams(params);
         userData.appendUser(new User(paramMap.get("userId"), paramMap.get("nickname"), paramMap.get("password")));
