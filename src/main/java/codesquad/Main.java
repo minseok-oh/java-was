@@ -1,5 +1,7 @@
 package codesquad;
 
+import codesquad.server.Server;
+
 public class Main {
     private static final Server server = new Server();
 
