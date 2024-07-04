@@ -1,4 +1,4 @@
-package codesquad;
+package codesquad.server;
 
 import codesquad.http.HttpParser;
 import codesquad.http.HttpRequest;
@@ -11,15 +11,14 @@ import java.util.HashMap;
 
 public record ClientHandler(Socket clientSocket) implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
-
-    private static final String RESOURCE_PATH = "src/main/resources/static";
+    private static final Router router = new Router();
 
     @Override
     public void run() {
         try {
             HttpRequest httpRequest = readHttpMessage(clientSocket);
+            router.send(clientSocket, httpRequest);
             logger.debug(httpRequest.toString());
-            send(clientSocket, RESOURCE_PATH + httpRequest.uri());
         } catch (IOException e) {
             logger.error(e.getMessage());
         } finally {
@@ -29,43 +28,6 @@ public record ClientHandler(Socket clientSocket) implements Runnable {
                 logger.error("클라이언트 소켓을 닫을 수 없습니다.");
             }
         }
-    }
-
-    public void send(Socket clientSocket, String path) throws IOException {
-        OutputStream clientOutput = clientSocket.getOutputStream();
-        String contentType = getContentType(path);
-
-        clientOutput.write("HTTP/1.1 200 OK\r\n".getBytes());
-        clientOutput.write(("Content-Type: " + contentType + "\r\n").getBytes());
-        clientOutput.write("\r\n".getBytes());
-
-        try (FileInputStream fileInputStream = new FileInputStream(path)) {
-            int bytesRead;
-            byte[] buffer = new byte[1024];
-            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
-                clientOutput.write(buffer, 0, bytesRead);
-            }
-        }
-        clientOutput.flush();
-    }
-
-    private String getContentType(final String path) {
-        String extension = "";
-        int i = path.lastIndexOf('.');
-        if (i > 0) {
-            extension = path.substring(i + 1);
-        }
-
-        return switch (extension) {
-            case "html" -> "text/html";
-            case "css" -> "text/css";
-            case "js" -> "application/javascript";
-            case "ico" -> "image/x-icon";
-            case "png" -> "image/png";
-            case "jpeg", "jpg" -> "image/jpeg";
-            case "svg" -> "image/svg+xml";
-            default -> "application/octet-stream";
-        };
     }
 
     private HttpRequest readHttpMessage(Socket clientSocket) throws IOException {
