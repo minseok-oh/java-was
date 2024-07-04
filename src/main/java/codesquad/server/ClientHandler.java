@@ -9,9 +9,15 @@ import java.io.*;
 import java.net.Socket;
 import java.util.HashMap;
 
-public record ClientHandler(Socket clientSocket) implements Runnable {
+public class ClientHandler implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(ClientHandler.class);
     private static final Router router = new Router();
+
+    private final Socket clientSocket;
+
+    public ClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
+    }
 
     @Override
     public void run() {
