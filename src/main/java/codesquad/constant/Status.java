@@ -2,7 +2,8 @@ package codesquad.constant;
 
 public enum Status {
     OK("200", "OK"),
-    FOUND("302", "FOUND");
+    PERMANENTLY("301", "Moved Permanently"),
+    FOUND("302", "Found");
 
     private final String code;
     private final String message;

@@ -29,13 +29,14 @@ public class Router {
 
     public void send(Socket clientSocket, HttpRequest httpRequest) throws IOException {
         String[] uri = httpRequest.uri().split("\\?");
+        String version = httpRequest.httpVersion();
         switch (uri[0]) {
-            case "/registration" -> sendRedirect(clientSocket, httpRequest.httpVersion(), uri[0]);
+            case "/registration" -> sendRedirect(clientSocket, new HttpResponse(version, Status.FOUND), uri[0]);
             case "/create" -> {
                 createUser(uri[1]);
-                sendRedirect(clientSocket, httpRequest.httpVersion(), uri[0]);
+                sendRedirect(clientSocket, new HttpResponse(version, Status.PERMANENTLY), uri[0]);
             }
-            default -> sendOk(clientSocket, httpRequest.httpVersion(), uri[0]);
+            default -> sendOk(clientSocket, new HttpResponse(version, Status.OK), uri[0]);
         }
     }
 
@@ -45,8 +46,7 @@ public class Router {
         userData.appendUser(new User(paramMap.get("userId"), paramMap.get("nickname"), paramMap.get("password")));
     }
 
-    public void sendOk(Socket clientSocket, String version, String path) throws IOException {
-        HttpResponse httpResponse = new HttpResponse(version, Status.OK);
+    public void sendOk(Socket clientSocket, HttpResponse httpResponse, String path) throws IOException {
         OutputStream clientOutput = clientSocket.getOutputStream();
         createBytes(clientOutput, httpResponse);
 
@@ -55,8 +55,7 @@ public class Router {
         clientOutput.flush();
     }
 
-    public void sendRedirect(Socket clientSocket, String version, String uri) throws IOException {
-        HttpResponse httpResponse = new HttpResponse(version, Status.FOUND);
+    public void sendRedirect(Socket clientSocket, HttpResponse httpResponse, String uri) throws IOException {
         OutputStream clientOutput = clientSocket.getOutputStream();
 
         createBytes(clientOutput, httpResponse);
