@@ -6,8 +6,6 @@ import java.io.*;
 import java.util.Objects;
 
 public class HttpGenerator {
-    private static final String RESOURCE_PATH = "src/main/resources/static";
-
     public static void createBytes(OutputStream clientOutput, HttpResponse httpResponse) throws IOException {
         clientOutput.write((httpResponse.httpVersion() + " "
                 + httpResponse.status().getCode() + " "
