@@ -2,9 +2,8 @@ package codesquad.http;
 
 import codesquad.constant.ContentType;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.util.Objects;
 
 public class HttpGenerator {
     private static final String RESOURCE_PATH = "src/main/resources/static";
@@ -24,10 +23,10 @@ public class HttpGenerator {
         clientOutput.write(("Content-Type: " + contentType.getContentType() + "\r\n").getBytes());
         clientOutput.write("\r\n".getBytes());
 
-        try (FileInputStream fileInputStream = new FileInputStream(RESOURCE_PATH + path)) {
+        try (InputStream fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + path)) {
             int bytesRead;
             byte[] buffer = new byte[1024];
-            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+            while ((bytesRead = Objects.requireNonNull(fileInputStream).read(buffer)) != -1) {
                 clientOutput.write(buffer, 0, bytesRead);
             }
         }
