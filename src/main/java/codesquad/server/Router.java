@@ -6,6 +6,8 @@ import codesquad.domain.UserData;
 import codesquad.http.HttpParser;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -26,6 +28,7 @@ public class Router {
     }};
 
     public static final UserData userData = new UserData();
+    private static final Logger logger = LoggerFactory.getLogger(Router.class);
 
     public void send(Socket clientSocket, HttpRequest httpRequest) throws IOException {
         String[] uri = httpRequest.uri().split("\\?");
@@ -43,6 +46,7 @@ public class Router {
     public void createUser(final String param) {
         String[] params = HttpParser.parseParam(URLDecoder.decode(param, StandardCharsets.UTF_8));
         Map<String, String> paramMap = HttpParser.parseParams(params);
+        logger.debug("[ userId: " + paramMap.get("userId") + ", nickname: " + paramMap.get("nickname") + ", password: " +  paramMap.get("password") + " ]");
         userData.appendUser(new User(paramMap.get("userId"), paramMap.get("nickname"), paramMap.get("password")));
     }
 
