@@ -23,4 +23,6 @@ public class HttpRequest {
     }
 
     public RequestStartLine getRequestStartLine() { return this.requestStartLine; }
+    public RequestBody getBody() { return this.body; }
+    public HttpHeaders getHeaders() { return this.headers; }
 }

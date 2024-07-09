@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,10 +26,10 @@ public class HttpParser {
         logger.debug(requestStartLine.toString());
 
         int emptyLineIndex = findEmptyLineIndex(message);
-        Map<String, String> headers = parseLines(1, emptyLineIndex, message);
+        Map<String, String> headers = parseHeaders(1, emptyLineIndex, message);
 
-        Map<String, String> body = null;
-        if (emptyLineIndex != -1) body = parseLines(emptyLineIndex + 1, message.length, message);
+        String body = null;
+        if (emptyLineIndex != -1) body = parseBody(emptyLineIndex + 1, message.length, message);
 
         return new HttpRequest(requestStartLine, new HttpHeaders(headers), new RequestBody(body));
     }
@@ -47,12 +48,16 @@ public class HttpParser {
         return -1;
     }
 
-    private static Map<String, String> parseLines(int start, int end, String[] message) {
+    private static Map<String, String> parseHeaders(int start, int end, String[] message) {
         Map<String, String> lines = new HashMap<>();
         for (int idx = start; idx < end; idx++) {
-            String[] words = message[idx].split(": ");
-            lines.put(words[0], words[1]);
+            String[] words = message[idx].split(":");
+            lines.put(words[0].trim(), words[1].trim());
         }
         return lines;
+    }
+
+    private static String parseBody(int start, int end, String[] message) {
+        return Arrays.toString(message).repeat(Math.max(0, end - start));
     }
 }
