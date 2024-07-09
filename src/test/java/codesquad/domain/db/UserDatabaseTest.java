@@ -1,13 +1,12 @@
-package codesquad.domain;
+package codesquad.domain.db;
 
-import codesquad.domain.db.UserDatabase;
 import codesquad.domain.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class UserTest {
+public class UserDatabaseTest {
     private final UserDatabase userDatabase = new UserDatabase();
 
     @Test
