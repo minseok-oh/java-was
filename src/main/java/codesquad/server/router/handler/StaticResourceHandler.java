@@ -1,6 +1,5 @@
 package codesquad.server.router.handler;
 
-import codesquad.domain.db.UserDatabase;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.constant.ContentType;

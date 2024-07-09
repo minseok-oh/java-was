@@ -15,11 +15,10 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static codesquad.Main.userDatabase;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationAPITest {
-    private RegistrationAPI registrationAPI = new RegistrationAPI();
+    private final RegistrationAPI registrationAPI = new RegistrationAPI();
 
     @Test
     @DisplayName("GET 요청을 처리하고 사용자를 리다이렉트해야 합니다")

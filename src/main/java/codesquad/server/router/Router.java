@@ -1,6 +1,5 @@
 package codesquad.server.router;
 
-import codesquad.domain.db.UserDatabase;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.server.router.handler.DynamicResourceHandler;

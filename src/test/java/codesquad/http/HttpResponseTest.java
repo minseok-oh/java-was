@@ -12,7 +12,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static codesquad.utils.StringUtil.CRLF;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HttpResponseTest {
