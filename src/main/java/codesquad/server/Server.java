@@ -54,7 +54,7 @@ public class Server {
                 try {
                     clientSocket.close();
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    e.getStackTrace();
                 }
             }
         };

@@ -17,7 +17,7 @@ public class DynamicResourceHandler implements ResourceHandler {
 
     private final Map<String, Function<HttpRequest, HttpResponse>> handler = new HashMap<>() {{
         put("/registration", (httpRequest) -> handleRedirect("/registration/index.html"));
-        put("/user/create", (httpRequest) -> handleCreateUser(httpRequest, "/index.html"));
+        put("/user/create", (httpRequest) -> handleCreateUser(httpRequest));
     }};
     private final UserDatabase userDatabase;
 
@@ -55,10 +55,10 @@ public class DynamicResourceHandler implements ResourceHandler {
         return headers;
     }
 
-    private HttpResponse handleCreateUser(final HttpRequest request, final String path) {
+    private HttpResponse handleCreateUser(final HttpRequest request) {
         Map<String, String> query = createQuery(request.getRequestStartLine().uri().getQuery());
         userDatabase.appendUser(new User(query.get("userId"), query.get("nickname"), query.get("password")));
-        return handleRedirect(path);
+        return handleRedirect("/index.html");
     }
 
     private Map<String, String> createQuery(final String query) {
