@@ -14,11 +14,6 @@ import java.net.URI;
 import java.util.HashMap;
 
 public class StaticResourceHandler implements ResourceHandler {
-    private final UserDatabase userDatabase;
-
-    public StaticResourceHandler(UserDatabase userDatabase) {
-        this.userDatabase = userDatabase;
-    }
 
     @Override
     public HttpResponse handle(final HttpRequest request) {
