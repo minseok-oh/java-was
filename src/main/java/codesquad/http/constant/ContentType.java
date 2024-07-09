@@ -1,4 +1,4 @@
-package codesquad.constant;
+package codesquad.http.constant;
 
 public enum ContentType {
     HTML("text/html"),
@@ -21,14 +21,8 @@ public enum ContentType {
         return this.contentType;
     }
 
-    public static ContentType createContentType(final String path) {
-        String extension = "";
-        int i = path.lastIndexOf('.');
-        if (i > 0) {
-            extension = path.substring(i + 1);
-        }
-
-        return switch (extension) {
+    public static ContentType getContentType(final String path) {
+        return switch (getFileExtension(path)) {
             case "html" -> ContentType.HTML;
             case "css" -> ContentType.CSS;
             case "js" -> ContentType.JS;
@@ -38,5 +32,15 @@ public enum ContentType {
             case "svg" -> ContentType.SVG;
             default -> ContentType.DEFAULT;
         };
+    }
+
+    private static String getFileExtension(String path) {
+        if (path == null) return null;
+        String fileName = path.substring(path.lastIndexOf('/') + 1);
+
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex == -1) return null;
+
+        return fileName.substring(dotIndex + 1);
     }
 }
