@@ -1,7 +1,10 @@
 package codesquad.server;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import codesquad.http.HttpRequest;
+import codesquad.http.HttpResponse;
+import codesquad.server.processor.Processor;
+import codesquad.server.router.Router;
+import codesquad.server.socket.ClientSocket;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -10,27 +13,50 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Server {
-    private static final Logger logger = LoggerFactory.getLogger(Server.class);
-
     private static final int PORT = 8080;
+    private static final int THREAD = 10;
 
     private ServerSocket serverSocket;
     private ExecutorService executor;
 
-    public void setUp() throws IOException {
+    private final Processor processor = new Processor();
+    private final Router router = new Router();
+
+    public void init() throws IOException {
         serverSocket = new ServerSocket(PORT);
-        executor = Executors.newFixedThreadPool(10);
-        logger.debug("Listening for connection on port 8080 ....");
+        executor = Executors.newFixedThreadPool(THREAD);
     }
 
-    public void receive() {
+    public void activate() {
+        System.out.println("8080 open!");
         while (true) {
             try {
-                Socket clientSocket = serverSocket.accept();
-                executor.submit(new ClientHandler(clientSocket));
+                Socket socket = serverSocket.accept();
+                executor.execute(run(new ClientSocket(socket)));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private Runnable run(ClientSocket clientSocket){
+        return () -> {
+            try {
+                String inputMessage = clientSocket.read();
+                HttpRequest httpRequest = processor.processRequest(inputMessage);
+
+                HttpResponse httpResponse = router.handle(httpRequest);
+                byte[] outputMessage = processor.processResponse(httpResponse);
+                clientSocket.write(outputMessage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                try {
+                    clientSocket.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
     }
 }
