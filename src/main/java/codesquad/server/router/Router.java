@@ -8,9 +8,8 @@ import codesquad.server.router.handler.StaticResourceHandler;
 
 public class Router {
 
-    private final UserDatabase userDatabase = new UserDatabase();
-    private final StaticResourceHandler staticResourceHandler = new StaticResourceHandler(userDatabase);
-    private final DynamicResourceHandler dynamicResourceHandler = new DynamicResourceHandler(userDatabase);
+    private final StaticResourceHandler staticResourceHandler = new StaticResourceHandler();
+    private final DynamicResourceHandler dynamicResourceHandler = new DynamicResourceHandler();
 
     public HttpResponse handle(HttpRequest httpRequest) throws Exception {
         HttpResponse response = dynamicResourceHandler.handle(httpRequest);
