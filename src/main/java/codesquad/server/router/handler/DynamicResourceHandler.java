@@ -1,13 +1,9 @@
 package codesquad.server.router.handler;
 
-import codesquad.domain.db.UserDatabase;
-import codesquad.domain.entity.User;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
-import codesquad.http.constant.HttpStatus;
-import codesquad.http.constant.HttpVersion;
-import codesquad.http.element.HttpHeaders;
-import codesquad.http.element.ResponseStartLine;
+import codesquad.server.router.api.CreateUserAPI;
+import codesquad.server.router.api.RegistrationAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,15 +11,13 @@ import java.util.function.Function;
 
 public class DynamicResourceHandler implements ResourceHandler {
 
-    private final Map<String, Function<HttpRequest, HttpResponse>> handler = new HashMap<>() {{
-        put("/registration", (httpRequest) -> handleRedirect("/registration/index.html"));
-        put("/user/create", (httpRequest) -> handleCreateUser(httpRequest));
-    }};
-    private final UserDatabase userDatabase;
+    private final RegistrationAPI registrationHandler = new RegistrationAPI();
+    private final CreateUserAPI createUserAPI = new CreateUserAPI();
 
-    public DynamicResourceHandler(UserDatabase userDatabase) {
-        this.userDatabase = userDatabase;
-    }
+    private final Map<String, Function<HttpRequest, HttpResponse>> handler = new HashMap<>() {{
+        put("/registration", registrationHandler::handle);
+        put("/user/create", createUserAPI::handle);
+    }};
 
     @Override
     public HttpResponse handle(final HttpRequest request) {
@@ -41,30 +35,5 @@ public class DynamicResourceHandler implements ResourceHandler {
             if (path.startsWith(key)) return handler.get(key);
         }
         return null;
-    }
-
-    private HttpResponse handleRedirect(final String path) {
-        ResponseStartLine responseStartLine = new ResponseStartLine(HttpVersion.HTTP_1_1, HttpStatus.FOUND);
-        HttpHeaders headers = createRedirectHeaders(path);
-        return new HttpResponse(responseStartLine, headers, null);
-    }
-
-    private HttpHeaders createRedirectHeaders(final String path) {
-        HttpHeaders headers = new HttpHeaders(new HashMap<>());
-        headers.appendHeader("Location", path);
-        return headers;
-    }
-
-    private HttpResponse handleCreateUser(final HttpRequest request) {
-        Map<String, String> query = createQuery(request.getRequestStartLine().uri().getQuery());
-        userDatabase.appendUser(new User(query.get("userId"), query.get("nickname"), query.get("password")));
-        return handleRedirect("/index.html");
-    }
-
-    private Map<String, String> createQuery(final String query) {
-        Map<String, String> result = new HashMap<>();
-        String[] parts = query.split("&");
-        for (String part: parts) { result.put(part.split("=")[0].strip(), part.split("=")[1].strip()); }
-        return result;
     }
 }
