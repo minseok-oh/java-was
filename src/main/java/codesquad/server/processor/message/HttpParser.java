@@ -3,6 +3,7 @@ package codesquad.server.processor.message;
 import codesquad.http.HttpRequest;
 import codesquad.http.constant.HttpMethod;
 import codesquad.http.constant.HttpVersion;
+import codesquad.http.element.HttpHeader;
 import codesquad.http.element.RequestBody;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.RequestStartLine;
@@ -10,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +26,10 @@ public class HttpParser {
         logger.debug(requestStartLine.toString());
 
         int emptyLineIndex = findEmptyLineIndex(message);
-        Map<String, String> headers = parseHeaders(1, emptyLineIndex, message);
+        Map<String, HttpHeader> headers = parseHeaders(1, emptyLineIndex, message);
 
         String body = null;
-        if (emptyLineIndex != -1) body = parseBody(emptyLineIndex + 1, message.length, message);
-
+        if (emptyLineIndex != message.length) body = parseBody(emptyLineIndex + 1, message.length, message);
         return new HttpRequest(requestStartLine, new HttpHeaders(headers), new RequestBody(body));
     }
 
@@ -45,19 +44,28 @@ public class HttpParser {
                 return i;
             }
         }
-        return -1;
+        return message.length;
     }
 
-    private static Map<String, String> parseHeaders(int start, int end, String[] message) {
-        Map<String, String> lines = new HashMap<>();
+    private static Map<String, HttpHeader> parseHeaders(int start, int end, String[] message) {
+        Map<String, HttpHeader> headers = new HashMap<>();
         for (int idx = start; idx < end; idx++) {
             String[] words = message[idx].split(":");
-            lines.put(words[0].trim(), words[1].trim());
+            String[] values = words[1].split(";");
+            parseHeader(words[0].trim(), values, headers);
         }
-        return lines;
+        return headers;
+    }
+
+    private static void parseHeader(final String message, final String[] values, final Map<String, HttpHeader> headers) {
+        HttpHeader header = new HttpHeader();
+        for (String value: values) header.append(value.trim());
+        headers.put(message, header);
     }
 
     private static String parseBody(int start, int end, String[] message) {
-        return Arrays.toString(message).repeat(Math.max(0, end - start));
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = start; i < end; i++) stringBuilder.append(message[i]).append(CRLF);
+        return stringBuilder.toString();
     }
 }

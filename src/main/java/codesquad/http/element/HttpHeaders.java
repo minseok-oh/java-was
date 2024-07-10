@@ -5,9 +5,9 @@ import java.util.Map;
 import static codesquad.utils.StringUtil.CRLF;
 
 public class HttpHeaders {
-    private final Map<String, String> headers;
+    private final Map<String, HttpHeader> headers;
 
-    public HttpHeaders(Map<String, String> headers) {
+    public HttpHeaders(Map<String, HttpHeader> headers) {
         this.headers = headers;
     }
 
@@ -15,12 +15,18 @@ public class HttpHeaders {
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         for (String key: headers.keySet()) {
-            stringBuilder.append(key).append(": ").append(headers.get(key)).append(CRLF);
+            stringBuilder.append(key).append(": ").append(headers.get(key).toString()).append(CRLF);
         }
         return stringBuilder.toString();
     }
 
     public void appendHeader(String key, String value) {
-        headers.put(key, value);
+        if (!headers.containsKey(key)) headers.put(key, new HttpHeader());
+        headers.get(key).append(value);
+    }
+
+    public HttpHeader getHeader(String key) {
+        if (!headers.containsKey(key)) return null;
+        return headers.get(key);
     }
 }
