@@ -1,17 +1,28 @@
 package codesquad.http;
 
-import java.util.Map;
+import codesquad.http.element.RequestBody;
+import codesquad.http.element.HttpHeaders;
+import codesquad.http.element.RequestStartLine;
 
-public record HttpRequest(String method, String uri, String httpVersion, Map<String, String> headers) {
+import static codesquad.utils.StringUtil.CRLF;
+
+public class HttpRequest {
+    private final RequestStartLine requestStartLine;
+    private final HttpHeaders headers;
+    private final RequestBody body;
+
+    public HttpRequest(RequestStartLine requestStartLine, HttpHeaders headers, RequestBody body) {
+        this.requestStartLine = requestStartLine;
+        this.headers = headers;
+        this.body = body;
+    }
 
     @Override
     public String toString() {
-        return "[ method: " + method + ", " +
-                "uri: " + uri + ", " +
-                "http: " + httpVersion + " ]";
+        return String.valueOf(requestStartLine) + headers + CRLF + body;
     }
 
-    public void setHeader(final String key, final String value) {
-        headers.put(key, value);
-    }
+    public RequestStartLine getRequestStartLine() { return this.requestStartLine; }
+    public RequestBody getBody() { return this.body; }
+    public HttpHeaders getHeaders() { return this.headers; }
 }

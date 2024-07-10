@@ -11,8 +11,27 @@
         const nickname = document.querySelector('input[placeholder="닉네임을 입력해주세요"]').value;
         const password = document.querySelector('input[placeholder="비밀번호를 입력해주세요"]').value;
 
-        const url = `/create?userId=${encodeURIComponent(userId)}&nickname=${encodeURIComponent(nickname)}&password=${encodeURIComponent(password)}`;
-        window.location.href = url;
+        const url = '/user/create';
+
+        const data = new URLSearchParams();
+        data.append('userId', userId);
+        data.append('nickname', nickname);
+        data.append('password', password);
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: data.toString()
+        })
+                .then(response => window.location.href = response.url)
+                .then(data => {
+                  console.log('Success:', data);
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
       }
 
       document.addEventListener("DOMContentLoaded", () => {

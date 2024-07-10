@@ -1,34 +1,55 @@
 package codesquad.http;
 
+import codesquad.http.constant.HttpMethod;
+import codesquad.http.constant.HttpVersion;
+import codesquad.http.element.HttpHeaders;
+import codesquad.http.element.RequestBody;
+import codesquad.http.element.RequestStartLine;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static codesquad.utils.StringUtil.CRLF;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HttpRequestTest {
 
-    @Test
-    @DisplayName("toString 메서드가 요구사항에 맞게 출력되어야 합니다")
-    void testToString() {
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Host", "localhost:8080");
-        HttpRequest request = new HttpRequest("GET", "/index.html", "HTTP/1.1", headers);
+    private RequestStartLine requestStartLine;
+    private HttpHeaders headers;
+    private RequestBody body;
 
-        String result = request.toString();
-        assertEquals("[ method: GET, uri: /index.html, http: HTTP/1.1 ]", result);
+    @BeforeEach
+    public void setUp() throws URISyntaxException {
+        requestStartLine = new RequestStartLine(HttpMethod.GET, new URI("/index.html"), HttpVersion.HTTP_1_1);
+
+        Map<String, String> headerMap = new HashMap<>();
+        headerMap.put("Host", "localhost");
+        headerMap.put("Connection", "keep-alive");
+        headers = new HttpHeaders(headerMap);
+        body = new RequestBody(null);
     }
 
     @Test
-    @DisplayName("setHeader를 통해 헤더가 추가되어야 합니다")
-    void testSetHeader() {
-        Map<String, String> headers = new HashMap<>();
-        HttpRequest request = new HttpRequest("GET", "/index.html", "HTTP/1.1", headers);
+    @DisplayName("요청이 만들어지고 이를 가져올 수 있습니다")
+    public void createHttpRequestTest() {
+        HttpRequest httpRequest = new HttpRequest(requestStartLine, headers, body);
 
-        request.setHeader("User-Agent", "Mozilla/5.0");
-        assertEquals("Mozilla/5.0", headers.get("User-Agent"));
+        assertNotNull(httpRequest);
+        assertEquals(requestStartLine, httpRequest.getRequestStartLine());
+        assertEquals(headers, httpRequest.getHeaders());
+        assertEquals(body, httpRequest.getBody());
     }
 
+    @Test
+    @DisplayName("요청을 문자열의 형태로 가져올 수 있습니다")
+    public void toStringTest() {
+        HttpRequest httpRequest = new HttpRequest(requestStartLine, headers, body);
+        String expected = String.valueOf(requestStartLine) + headers + CRLF + body;
+        assertEquals(expected, httpRequest.toString());
+    }
 }
