@@ -26,7 +26,7 @@ public class HttpParser {
         logger.debug(requestStartLine.toString());
 
         int emptyLineIndex = findEmptyLineIndex(message);
-        Map<String, HttpHeader> headers = parseHeaders(1, emptyLineIndex, message);
+        Map<String, HttpHeader> headers = parseHeaders(emptyLineIndex, message);
 
         String body = null;
         if (emptyLineIndex != message.length) body = parseBody(emptyLineIndex + 1, message.length, message);
@@ -47,9 +47,9 @@ public class HttpParser {
         return message.length;
     }
 
-    private static Map<String, HttpHeader> parseHeaders(int start, int end, String[] message) {
+    private static Map<String, HttpHeader> parseHeaders(int end, String[] message) {
         Map<String, HttpHeader> headers = new HashMap<>();
-        for (int idx = start; idx < end; idx++) {
+        for (int idx = 1; idx < end; idx++) {
             String[] words = message[idx].split(":");
             String[] values = words[1].split(";");
             parseHeader(words[0].trim(), values, headers);

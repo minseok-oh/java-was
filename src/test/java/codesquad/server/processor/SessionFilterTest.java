@@ -32,7 +32,7 @@ public class SessionFilterTest {
 
         HttpRequest httpRequest = new HttpRequest(requestStartLine, headers,null);
         try {
-            HttpRequest filteredRequest = SessionFilter.filter(httpRequest);
+            SessionFilter.filter(httpRequest);
         } catch (Exception e) {
             assertInstanceOf(RuntimeException.class, e);
         }

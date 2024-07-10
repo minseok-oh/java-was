@@ -18,7 +18,7 @@ import static codesquad.Main.userDatabase;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoginAPITest {
-    private LoginAPI loginAPI = new LoginAPI();
+    private final LoginAPI loginAPI = new LoginAPI();
 
     @BeforeEach
     public void setUp() {
