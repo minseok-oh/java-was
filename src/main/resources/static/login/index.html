@@ -5,6 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="../reset.css" rel="stylesheet" />
     <link href="../global.css" rel="stylesheet" />
+    <script>
+      function loginUser() {
+        const userId = document.querySelector('input[placeholder="아이디를 입력해주세요"]').value;
+        const password = document.querySelector('input[placeholder="비밀번호를 입력해주세요"]').value;
+
+        const url = '/user/login';
+
+        const data = new URLSearchParams();
+        data.append('userId', userId);
+        data.append('password', password);
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: data.toString()
+        })
+                .then(response => window.location.href = response.url)
+                .then(data => {
+                  console.log('Success:', data);
+                })
+                .catch((error) => {
+                  console.error('Error:', error);
+                });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("login-btn").addEventListener("click", loginUser);
+      });
+    </script>
   </head>
   <body>
     <div class="container">

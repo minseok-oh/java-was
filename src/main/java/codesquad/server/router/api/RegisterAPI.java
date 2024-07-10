@@ -6,25 +6,18 @@ import codesquad.http.HttpResponse;
 import codesquad.http.constant.HttpMethod;
 import codesquad.server.router.handler.ResourceHandler;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static codesquad.Main.userDatabase;
+import static codesquad.domain.entity.User.createUserInfo;
 
-public class CreateUserAPI implements ResourceHandler {
+public class RegisterAPI implements ResourceHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
         if (request.getRequestStartLine().method() != HttpMethod.POST) throw new IllegalArgumentException();
 
         Map<String, String> info = createUserInfo(request.getBody().toString());
-        userDatabase.appendUser(new User(info.get("userId"), info.get("nickname"), info.get("password")));
+        userDatabase.append(new User(info.get("userId"), info.get("nickname"), info.get("password")));
         return handleRedirect("/index.html");
-    }
-
-    private Map<String, String> createUserInfo(final String info) throws IllegalArgumentException {
-        Map<String, String> result = new HashMap<>();
-        String[] parts = info.split("&");
-        for (String part: parts) { result.put(part.split("=")[0].strip(), part.split("=")[1].strip()); }
-        return result;
     }
 }

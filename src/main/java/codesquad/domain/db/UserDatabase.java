@@ -2,22 +2,29 @@ package codesquad.domain.db;
 
 import codesquad.domain.entity.User;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class UserDatabase {
-    Map<String, User> users = new HashMap<>();
+public class UserDatabase implements Database<String, User> {
+    Map<String, User> userDB = new ConcurrentHashMap<>();
 
     @Override
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        for (String key: users.keySet()) {
-            stringBuilder.append(key).append(": ").append(users.get(key)).append("\n");
+        for (String key: userDB.keySet()) {
+            stringBuilder.append(key).append(": ").append(userDB.get(key)).append("\n");
         }
         return stringBuilder.toString();
     }
 
-    public void appendUser(User user) { users.put(user.userId(), user); }
-    public User getUserById(String id) { return users.get(id); }
-    public Map<String, User> getUsers() { return users; }
+    public String append(User user) {
+        String userId = user.userId();
+        userDB.put(userId, user);
+        return userId;
+    }
+    public User getById(String id) {
+        if (!userDB.containsKey(id)) return null;
+        return userDB.get(id);
+    }
+    public Map<String, User> getAll() { return userDB; }
 }

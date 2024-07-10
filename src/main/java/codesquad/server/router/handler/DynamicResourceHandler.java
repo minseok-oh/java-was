@@ -2,8 +2,9 @@ package codesquad.server.router.handler;
 
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
-import codesquad.server.router.api.CreateUserAPI;
-import codesquad.server.router.api.RegistrationAPI;
+import codesquad.server.router.api.LogoutAPI;
+import codesquad.server.router.api.RegisterAPI;
+import codesquad.server.router.api.LoginAPI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,12 +12,16 @@ import java.util.function.Function;
 
 public class DynamicResourceHandler implements ResourceHandler {
 
-    private final RegistrationAPI registrationHandler = new RegistrationAPI();
-    private final CreateUserAPI createUserAPI = new CreateUserAPI();
+    private final RegisterAPI registerAPI = new RegisterAPI();
+    private final LoginAPI loginAPI = new LoginAPI();
+    private final LogoutAPI logoutAPI = new LogoutAPI();
 
     private final Map<String, Function<HttpRequest, HttpResponse>> handler = new HashMap<>() {{
-        put("/registration", registrationHandler::handle);
-        put("/user/create", createUserAPI::handle);
+        put("/registration", (HttpRequest) -> handleRedirect("/registration/index.html"));
+        put("/login", (HttpRequest) -> handleRedirect("/login/index.html"));
+        put("/logout", logoutAPI::handle);
+        put("/user/create", registerAPI::handle);
+        put("/user/login", loginAPI::handle);
     }};
 
     @Override

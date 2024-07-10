@@ -2,6 +2,7 @@ package codesquad.http;
 
 import codesquad.http.constant.HttpMethod;
 import codesquad.http.constant.HttpVersion;
+import codesquad.http.element.HttpHeader;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.RequestBody;
 import codesquad.http.element.RequestStartLine;
@@ -27,9 +28,10 @@ public class HttpRequestTest {
     public void setUp() throws URISyntaxException {
         requestStartLine = new RequestStartLine(HttpMethod.GET, new URI("/index.html"), HttpVersion.HTTP_1_1);
 
-        Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Host", "localhost");
-        headerMap.put("Connection", "keep-alive");
+        Map<String, HttpHeader> headerMap = new HashMap<>();
+        HttpHeader header = new HttpHeader();
+        header.append("localhost");
+        headerMap.put("Host", header);
         headers = new HttpHeaders(headerMap);
         body = new RequestBody(null);
     }

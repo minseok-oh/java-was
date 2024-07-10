@@ -23,8 +23,10 @@ class HttpResponseTest {
     public void setUp() throws URISyntaxException {
         responseStartLine = new ResponseStartLine(HttpVersion.HTTP_1_1, HttpStatus.OK);
 
-        Map<String, String> headerMap = new HashMap<>();
-        headerMap.put("Content-Length", "3");
+        Map<String, HttpHeader> headerMap = new HashMap<>();
+        HttpHeader header = new HttpHeader();
+        header.append("3");
+        headerMap.put("Content-Length", header);
         headers = new HttpHeaders(headerMap);
         body = new ResponseBody(new URI("/index.html"));
     }
