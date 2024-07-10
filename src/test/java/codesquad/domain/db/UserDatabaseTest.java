@@ -13,8 +13,8 @@ public class UserDatabaseTest {
     @DisplayName("user 정보를 입력하면 이에 해당하는 user 객체가 생성됩니다")
     void appendUser() {
         User user = new User("userId", "nickName", "password");
-        userDatabase.appendUser(user);
-        assertEquals(user, userDatabase.getUserById("userId"));
+        userDatabase.append(user);
+        assertEquals(user, userDatabase.getById("userId"));
     }
 
     @Test
@@ -24,10 +24,10 @@ public class UserDatabaseTest {
         User user2 = new User("userId2", "nickName2", "password2");
         User user3 = new User("userId3", "nickName3", "password3");
 
-        userDatabase.appendUser(user1);
-        userDatabase.appendUser(user2);
-        userDatabase.appendUser(user3);
+        userDatabase.append(user1);
+        userDatabase.append(user2);
+        userDatabase.append(user3);
 
-        assertEquals(3, userDatabase.getUsers().size());
+        assertEquals(3, userDatabase.getAll().size());
     }
 }
