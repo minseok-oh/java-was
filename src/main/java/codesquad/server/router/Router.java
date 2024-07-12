@@ -8,6 +8,7 @@ import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.ResponseBody;
 import codesquad.http.element.ResponseStartLine;
 import codesquad.http.exception.client.Http400Exception;
+import codesquad.http.exception.client.Http404Exception;
 import codesquad.server.router.handler.DynamicResourceHandler;
 import codesquad.server.router.handler.StaticResourceHandler;
 
@@ -28,7 +29,7 @@ public class Router {
         response = staticResourceHandler.handle(httpRequest);
         if (response != null) return response;
 
-        throw new Http400Exception();
+        throw new Http404Exception();
     }
 
     public HttpResponse handleException(HttpStatus status) throws URISyntaxException {

@@ -38,14 +38,6 @@ public class SessionFilterTest {
         }
     }
 
-    @Test
-    @DisplayName("유효한 cookie 사용자는 index.html을 접근 시 main/index.html로 가야 합니다")
-    void testVerifiedCookie() throws URISyntaxException {
-        RequestStartLine requestStartLine = new RequestStartLine(HttpMethod.GET, new URI("/index.html"), HttpVersion.HTTP_1_1);
-        Session session = sessionDatabase.append(new User(null, null, null));
-        HttpHeaders headers = createHeaders(session);
-    }
-
     private HttpHeaders createHeaders(Session session) {
         HttpHeader header = new HttpHeader();
         header.append("SID=" + session.sid());
