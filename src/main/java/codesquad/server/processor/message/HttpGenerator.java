@@ -2,6 +2,7 @@ package codesquad.server.processor.message;
 
 import codesquad.http.HttpResponse;
 import codesquad.http.element.ResponseBody;
+import codesquad.server.processor.template.TemplateEngine;
 
 import java.io.*;
 
@@ -34,6 +35,7 @@ public class HttpGenerator {
 
             result = byteArrayOutputStream.toByteArray();
         }
+        if (body.getUri().getPath().endsWith(".html")) result = TemplateEngine.convert(result);
         return result;
     }
 
