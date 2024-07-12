@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../reset.css" rel="stylesheet" />
+    <link href="../global.css" rel="stylesheet" />
+    <link href="../main.css" rel="stylesheet" />
+    <style>
+        .user-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .user-item {
+            background-color: #f8f8f8;
+            border-left: 5px solid #4CAF50;
+            margin-bottom: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .user-item:hover {
+            background-color: #fff;
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .user-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .user-nickname {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <a href="/main"><img src="../img/signiture.svg" /></a>
+    </header>
+    <div class="wrapper">
+        <ul class="user-list">
+            {{userList}}
+        </ul>
+    </div>
+</div>
+</body>
+</html>

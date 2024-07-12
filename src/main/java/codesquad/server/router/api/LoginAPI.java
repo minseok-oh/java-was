@@ -9,6 +9,7 @@ import codesquad.http.constant.HttpStatus;
 import codesquad.http.constant.HttpVersion;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.ResponseStartLine;
+import codesquad.http.exception.client.Http405Exception;
 import codesquad.server.router.handler.ResourceHandler;
 
 import java.util.HashMap;
@@ -23,7 +24,7 @@ public class LoginAPI implements ResourceHandler {
 
     @Override
     public HttpResponse handle(HttpRequest request) {
-        if (request.getRequestStartLine().method() != HttpMethod.POST) throw new IllegalArgumentException();
+        if (request.getRequestStartLine().method() != HttpMethod.POST) throw new Http405Exception();
 
         Map<String, String> userInfo = createUserInfo(request.getBody().toString());
         User user = userDatabase.getById(userInfo.get("userId"));

@@ -8,6 +8,9 @@ import codesquad.http.constant.HttpStatus;
 import codesquad.http.constant.HttpVersion;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.ResponseStartLine;
+import codesquad.http.exception.client.Http400Exception;
+import codesquad.http.exception.client.Http405Exception;
+import codesquad.security.SessionManager;
 import codesquad.server.router.handler.ResourceHandler;
 
 import java.util.HashMap;
@@ -17,11 +20,11 @@ import static codesquad.Main.sessionDatabase;
 public class LogoutAPI implements ResourceHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
-        if (request.getRequestStartLine().method() != HttpMethod.GET) throw new IllegalArgumentException();
+        if (request.getRequestStartLine().method() != HttpMethod.GET) throw new Http405Exception();
 
         String sessionId = request.getHeaders().getHeader("Cookie").getHeaderValue("SID");
         Session session = new Session(sessionId);
-        if (sessionId == null && !sessionDatabase.isExist(session)) throw new RuntimeException();
+        if (sessionId == null && !SessionManager.isExist(session)) throw new Http400Exception();
 
         sessionDatabase.deleteById(session);
         return handleRedirect("/index.html");

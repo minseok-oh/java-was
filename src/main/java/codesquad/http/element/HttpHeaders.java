@@ -1,12 +1,14 @@
 package codesquad.http.element;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static codesquad.utils.StringUtil.CRLF;
 
 public class HttpHeaders {
-    private final Map<String, HttpHeader> headers;
+    private Map<String, HttpHeader> headers = new HashMap<>();
 
+    public HttpHeaders() {}
     public HttpHeaders(Map<String, HttpHeader> headers) {
         this.headers = headers;
     }

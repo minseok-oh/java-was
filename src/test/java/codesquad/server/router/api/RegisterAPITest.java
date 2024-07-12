@@ -8,6 +8,7 @@ import codesquad.http.element.HttpHeader;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.RequestBody;
 import codesquad.http.element.RequestStartLine;
+import codesquad.http.exception.client.Http405Exception;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,6 @@ class RegisterAPITest {
                 new RequestBody(requestBody)
         );
 
-        assertThrows(IllegalArgumentException.class, () -> createUserAPI.handle(httpRequest));
+        assertThrows(Http405Exception.class, () -> createUserAPI.handle(httpRequest));
     }
 }
