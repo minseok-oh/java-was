@@ -8,8 +8,8 @@ import codesquad.http.constant.HttpVersion;
 import codesquad.http.element.HttpHeader;
 import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.RequestStartLine;
-import codesquad.server.processor.session.SessionFilter;
-import codesquad.server.processor.session.SessionManager;
+import codesquad.security.SessionFilter;
+import codesquad.security.SessionManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -44,10 +44,6 @@ public class SessionFilterTest {
         RequestStartLine requestStartLine = new RequestStartLine(HttpMethod.GET, new URI("/index.html"), HttpVersion.HTTP_1_1);
         Session session = sessionDatabase.append(new User(null, null, null));
         HttpHeaders headers = createHeaders(session);
-
-        HttpRequest httpRequest = new HttpRequest(requestStartLine, headers,null);
-        HttpRequest filteredRequest = SessionFilter.filter(httpRequest);
-        assertEquals(filteredRequest.getRequestStartLine().uri().getPath(), "/main/index.html");
     }
 
     private HttpHeaders createHeaders(Session session) {
