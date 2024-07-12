@@ -13,6 +13,8 @@ public class HttpRequest {
 
     public HttpRequest(RequestStartLine requestStartLine, HttpHeaders headers, RequestBody body) {
         this.requestStartLine = requestStartLine;
+        if (requestStartLine == null) throw new IllegalArgumentException("RequestStartLine is null");
+
         this.headers = headers;
         this.body = body;
     }

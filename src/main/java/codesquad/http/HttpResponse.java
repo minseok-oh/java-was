@@ -11,6 +11,8 @@ public class HttpResponse {
 
     public HttpResponse(ResponseStartLine responseStartLine, HttpHeaders headers, ResponseBody body) {
         this.responseStartLine = responseStartLine;
+        if (responseStartLine == null) throw new IllegalArgumentException("ResponseStartLine is null");
+
         this.headers = headers;
         this.body = body;
     }
