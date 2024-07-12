@@ -17,14 +17,25 @@ public class UserDatabase implements Database<String, User> {
         return stringBuilder.toString();
     }
 
+    @Override
     public String append(User user) {
         String userId = user.userId();
         userDB.put(userId, user);
         return userId;
     }
+
+    @Override
     public User getById(String id) {
         if (!userDB.containsKey(id)) return null;
         return userDB.get(id);
     }
+
+    @Override
     public Map<String, User> getAll() { return userDB; }
+
+    @Override
+    public void deleteById(String id) {
+        if (!userDB.containsKey(id)) return;
+        userDB.remove(id);
+    }
 }

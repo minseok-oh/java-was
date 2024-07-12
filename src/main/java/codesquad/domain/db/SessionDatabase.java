@@ -2,7 +2,7 @@ package codesquad.domain.db;
 
 import codesquad.domain.entity.Session;
 import codesquad.domain.entity.User;
-import codesquad.server.processor.session.SessionManager;
+import codesquad.security.SessionManager;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,12 +18,17 @@ public class SessionDatabase implements Database<Session, User> {
     }
 
     @Override
-    public User getById(Session id) { return sessionDB.get(id); }
+    public User getById(Session id) {
+        if (!sessionDB.containsKey(id)) return null;
+        return sessionDB.get(id);
+    }
 
     @Override
     public Map<Session, User> getAll() { return sessionDB; }
 
-    public boolean isExist(Session id) { return sessionDB.containsKey(id); }
-
-    public void deleteById(Session id) { sessionDB.remove(id); }
+    @Override
+    public void deleteById(Session id) {
+        if (!sessionDB.containsKey(id)) return;
+        sessionDB.remove(id);
+    }
 }
