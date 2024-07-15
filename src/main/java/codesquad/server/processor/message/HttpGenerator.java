@@ -21,7 +21,7 @@ public class HttpGenerator {
     }
 
     private static byte[] generateFileBody(ResponseBody body) throws IOException {
-        if (body == null) throw new Http404Exception();
+        if (body == null) return new byte[0];
 
         byte[] result;
         try (InputStream fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + body.getUri().getPath());
