@@ -2,6 +2,7 @@ package codesquad.server.processor.message;
 
 import codesquad.http.HttpResponse;
 import codesquad.http.element.ResponseBody;
+import codesquad.http.exception.client.Http404Exception;
 import codesquad.server.processor.template.TemplateEngine;
 
 import java.io.*;
@@ -20,12 +21,12 @@ public class HttpGenerator {
     }
 
     private static byte[] generateFileBody(ResponseBody body) throws IOException {
-        if (body == null) return new byte[0];
+        if (body == null) throw new Http404Exception();
 
         byte[] result;
         try (InputStream fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + body.getUri().getPath());
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            if (fileInputStream == null) return new byte[0];
+            if (fileInputStream == null) throw new Http404Exception();
 
             int bytesRead;
             byte[] buffer = new byte[1024];

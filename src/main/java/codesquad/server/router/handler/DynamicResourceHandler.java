@@ -21,6 +21,8 @@ public class DynamicResourceHandler implements ResourceHandler {
     private final Map<String, Function<HttpRequest, HttpResponse>> handler = new HashMap<>() {{
         put("/registration", (HttpRequest) -> handleRedirect("/registration/index.html"));
         put("/login", (HttpRequest) -> handleRedirect("/login/index.html"));
+        put("/article", (HttpRequest) -> handleRedirect("/article/index.html"));
+        put("/comment", (HttpRequest) -> handleRedirect("/comment/index.html"));
         put("/user/list", userListAPI::handle);
         put("/logout", logoutAPI::handle);
         put("/user/create", registerAPI::handle);
