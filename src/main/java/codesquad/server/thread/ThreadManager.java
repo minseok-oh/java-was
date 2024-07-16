@@ -12,7 +12,6 @@ public class ThreadManager {
 
     public static final ThreadLocal<Session> threadLocalSession = new ThreadLocal<>();
     public static final ThreadLocal<Boolean> sessionVerified = new ThreadLocal<>();
-    public static final ThreadLocal<HttpStatus> httpStatus = new ThreadLocal<>();
 
     public ThreadManager(final int thread) {
         executor = Executors.newFixedThreadPool(thread);
@@ -25,6 +24,5 @@ public class ThreadManager {
     public void clear() {
         threadLocalSession.remove();
         sessionVerified.remove();
-        httpStatus.remove();
     }
 }
