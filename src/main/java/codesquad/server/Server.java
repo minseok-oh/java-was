@@ -2,6 +2,7 @@ package codesquad.server;
 
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
+import codesquad.http.constant.HttpStatus;
 import codesquad.http.exception.HttpException;
 import codesquad.server.processor.Processor;
 import codesquad.server.router.Router;
@@ -11,8 +12,6 @@ import codesquad.server.thread.ThreadManager;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-
-import static codesquad.server.thread.ThreadManager.httpStatus;
 
 public class Server {
     private final int PORT = 8080;
@@ -54,7 +53,7 @@ public class Server {
             try {
                 start(clientSocket);
             } catch (HttpException httpException) {
-                handleHttpException(clientSocket);
+                handleHttpException(clientSocket, httpException.getStatus());
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -64,9 +63,9 @@ public class Server {
         };
     }
 
-    private void handleHttpException(ClientSocket clientSocket) {
+    private void handleHttpException(ClientSocket clientSocket, HttpStatus httpStatus) {
         try {
-            HttpResponse httpResponse = router.handleException(httpStatus.get());
+            HttpResponse httpResponse = router.handleException(httpStatus);
             byte[] outputMessage = processor.processResponse(httpResponse);
             clientSocket.write(outputMessage);
         } catch (Exception e) {

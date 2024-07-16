@@ -6,6 +6,7 @@ import codesquad.http.exception.client.Http404Exception;
 import codesquad.server.processor.template.TemplateEngine;
 
 import java.io.*;
+import java.net.URI;
 
 import static codesquad.utils.StringUtil.CRLF;
 
@@ -20,11 +21,21 @@ public class HttpGenerator {
         return concatenate(headerLines, bodyLines);
     }
 
+    public static byte[] generateException(HttpResponse httpResponse) throws IOException {
+        String startLine = httpResponse.getResponseStartLine().toString();
+        String headers = httpResponse.getHttpHeaders().toString();
+
+        byte[] headerLines = (startLine + headers + CRLF).getBytes();
+        byte[] bodyLines = "<h1>%s</h1>".formatted(httpResponse.getResponseStartLine().status()).getBytes();
+        return concatenate(headerLines, bodyLines);
+    }
+
     private static byte[] generateFileBody(ResponseBody body) throws IOException {
         if (body == null) return new byte[0];
 
         byte[] result;
-        try (InputStream fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + body.getUri().getPath());
+        URI uri = body.getUri();
+        try (InputStream fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + uri.getPath());
              ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             if (fileInputStream == null) throw new Http404Exception();
 
@@ -36,7 +47,7 @@ public class HttpGenerator {
 
             result = byteArrayOutputStream.toByteArray();
         }
-        if (body.getUri().getPath().endsWith(".html")) result = TemplateEngine.convert(result);
+        if (body.getUri().getPath().endsWith(".html")) result = TemplateEngine.convert(result, uri.getQuery());
         return result;
     }
 
