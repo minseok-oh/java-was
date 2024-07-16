@@ -26,7 +26,9 @@ public class StaticResourceHandler implements ResourceHandler {
     @Override
     public HttpResponse handle(final HttpRequest request) {
         URI uri = createVerifiedUri(request.getRequestStartLine().uri());
-        if (uri == null) return handleRedirect("/main/index.html");
+        if (!sessionVerified.get() && uri.getPath().equals("/article/index.html")) return handleRedirect("/login/index.html");
+        if (uri == null) return handleRedirect("/main/index.html?id=1");
+        if (uri.getPath().equals("/index.html") && uri.getQuery() == null) return handleRedirect("/index.html?id=1");
 
         ResponseStartLine responseStartLine = new ResponseStartLine(HttpVersion.HTTP_1_1, HttpStatus.OK);
         ResponseBody body = new ResponseBody(uri);

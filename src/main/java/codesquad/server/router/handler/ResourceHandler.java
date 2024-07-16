@@ -10,7 +10,7 @@ import codesquad.http.element.ResponseStartLine;
 import java.util.HashMap;
 
 public interface ResourceHandler {
-    HttpResponse handle(final HttpRequest request) throws Exception;
+    HttpResponse handle(final HttpRequest request);
 
     default HttpResponse handleRedirect(final String path) {
         ResponseStartLine responseStartLine = new ResponseStartLine(HttpVersion.HTTP_1_1, HttpStatus.FOUND);
