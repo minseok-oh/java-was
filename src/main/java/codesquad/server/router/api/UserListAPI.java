@@ -14,6 +14,6 @@ public class UserListAPI implements ResourceHandler {
     public HttpResponse handle(HttpRequest request) {
         if (request.getRequestStartLine().method() != HttpMethod.GET) throw new Http405Exception();
         if (sessionVerified.get() == null || !sessionVerified.get()) return handleRedirect("/login/index.html");
-        return handleRedirect("/user/index.html");
+        return handleRedirect("/user/index.html?id=1");
     }
 }

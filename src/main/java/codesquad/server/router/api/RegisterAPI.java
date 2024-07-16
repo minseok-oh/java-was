@@ -19,6 +19,6 @@ public class RegisterAPI implements ResourceHandler {
 
         Map<String, String> info = createUserInfo(request.getBody().toString());
         userDatabase.append(new User(info.get("userId"), info.get("nickname"), info.get("password")));
-        return handleRedirect("/index.html");
+        return handleRedirect("/index.html?id=1");
     }
 }

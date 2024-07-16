@@ -31,12 +31,12 @@ public class LoginAPI implements ResourceHandler {
         if (!verifyUserInfo(user, userInfo)) return handleRedirect("/login/login_failed.html");
 
         Session session = sessionDatabase.append(user);
-        return handleRedirect("/main/index.html", session.sid());
+        return handleRedirect("/main/index.html?id=1", session.sid());
     }
 
     private boolean verifyUserInfo(User user, Map<String, String> userInfo) {
         return !Objects.equals(user, null) &&
-                Objects.equals(user.userId(), userInfo.get("userId")) &&
+                Objects.equals(user.userid(), userInfo.get("userId")) &&
                 Objects.equals(user.password(), userInfo.get("password"));
     }
 
