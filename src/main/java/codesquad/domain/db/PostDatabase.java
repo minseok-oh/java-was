@@ -1,9 +1,12 @@
 package codesquad.domain.db;
 
-import codesquad.domain.connect.DatabaseConnector;
+import codesquad.domain.DatabaseSource;
 import codesquad.domain.entity.Post;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,9 +15,16 @@ public class PostDatabase implements Database<Integer, Post> {
     @Override
     public Integer append(Post data) {
         Integer id = null;
-        try (Connection connection = DatabaseConnector.connect()){
-            String createPostSQL = "INSERT INTO Post (%s, %s) VALUES (?, ?)".formatted(data.user().userId(), data.content());
-            id = connection.prepareStatement(createPostSQL).executeUpdate();
+        try (Connection connection = DatabaseSource.connect()){
+            String createPostSQL = "INSERT INTO posts (userid, title, contents) VALUES (?, ?, ?)";
+            PreparedStatement pstmt = connection.prepareStatement(createPostSQL, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, data.userid());
+            pstmt.setString(2, data.title());
+            pstmt.setString(3, data.contents());
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+            if (rs.next()) id = rs.getInt(1);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -24,11 +34,14 @@ public class PostDatabase implements Database<Integer, Post> {
     @Override
     public Post getById(Integer id) {
         Post post = null;
-        try (Connection connection = DatabaseConnector.connect()) {
-            String getPostSQL = "SELECT * FROM Post WHERE id = %s".formatted(id);
-            var resultSet = connection.prepareStatement(getPostSQL).executeQuery();
-            if (resultSet.next()) return null;
-            post = new Post(null, resultSet.getString("contents"));
+        try (Connection connection = DatabaseSource.connect()) {
+            String getPostSQL = "SELECT * FROM posts WHERE id = ?";
+            PreparedStatement pstmt = connection.prepareStatement(getPostSQL);
+            pstmt.setString(1, id.toString());
+
+            var resultSet = pstmt.executeQuery();
+            if (!resultSet.next()) return null;
+            post = new Post(resultSet.getString("userid"), resultSet.getString("title"), resultSet.getString("contents"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -38,11 +51,11 @@ public class PostDatabase implements Database<Integer, Post> {
     @Override
     public Map<Integer, Post> getAll() {
         Map<Integer, Post> result = new HashMap<>();
-        try (Connection connection = DatabaseConnector.connect()){
-            String getAllPostsSQL = "SELECT * FROM Post";
+        try (Connection connection = DatabaseSource.connect()){
+            String getAllPostsSQL = "SELECT * FROM posts";
             var resultSet = connection.prepareStatement(getAllPostsSQL).executeQuery();
             while (resultSet.next()) {
-                result.put(resultSet.getInt("id"), new Post(null, resultSet.getString("contents")));
+                result.put(resultSet.getInt("id"), new Post(resultSet.getString("userid"), resultSet.getString("title"), resultSet.getString("contents")));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,8 +65,8 @@ public class PostDatabase implements Database<Integer, Post> {
 
     @Override
     public void deleteById(Integer id) {
-        try (Connection connection = DatabaseConnector.connect()) {
-            String deletePostSQL = "DELETE FROM Post WHERE id = %s".formatted(id);
+        try (Connection connection = DatabaseSource.connect()) {
+            String deletePostSQL = "DELETE FROM posts WHERE id = %s".formatted(id);
             connection.prepareStatement(deletePostSQL).executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
