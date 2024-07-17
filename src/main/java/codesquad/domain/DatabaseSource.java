@@ -1,7 +1,5 @@
 package codesquad.domain;
 
-import codesquad.server.processor.message.HttpGenerator;
-import codesquad.server.processor.message.HttpParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
