@@ -10,14 +10,13 @@ import codesquad.server.router.handler.ResourceHandler;
 import java.util.Map;
 
 import static codesquad.Main.userDatabase;
-import static codesquad.domain.entity.User.createUserInfo;
 
 public class RegisterAPI implements ResourceHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
         if (request.getRequestStartLine().method() != HttpMethod.POST) throw new Http405Exception();
 
-        Map<String, String> info = createUserInfo(request.getBody().toString());
+        Map<String, String> info = request.getBody().getBodyMap();
         userDatabase.append(new User(info.get("userId"), info.get("nickname"), info.get("password")));
         return handleRedirect("/index.html?id=1");
     }

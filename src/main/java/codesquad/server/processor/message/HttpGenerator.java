@@ -47,7 +47,7 @@ public class HttpGenerator {
 
             result = byteArrayOutputStream.toByteArray();
         }
-        if (body.getUri().getPath().endsWith(".html")) result = TemplateEngine.convert(result, uri.getQuery());
+        if (body.getUri().getPath().endsWith(".html")) result = TemplateEngine.convert(result, body.getBodyMap().get("id"));
         return result;
     }
 

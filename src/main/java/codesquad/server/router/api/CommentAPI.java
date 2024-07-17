@@ -6,15 +6,17 @@ import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.server.router.handler.ResourceHandler;
 
+import java.util.Map;
+
 import static codesquad.Main.*;
-import static codesquad.server.thread.ThreadManager.threadLocalSession;
+import static codesquad.server.thread.ThreadManager.session;
 
 public class CommentAPI implements ResourceHandler {
     @Override
     public HttpResponse handle(HttpRequest request) {
-        User user = sessionDatabase.getById(threadLocalSession.get());
-        String[] uriSplit = request.getBody().toString().split("&");
-        commentDatabase.append(new Comment(user.userid(), uriSplit[0].split("=")[1], uriSplit[1].split("=")[1]));
-        return handleRedirect("/main/index.html?id=" + uriSplit[0].split("=")[1]);
+        User user = sessionDatabase.getById(session.get());
+        Map<String, String> contents = request.getBody().getBodyMap();
+        commentDatabase.append(new Comment(user.userid(), contents.get("id"), contents.get("contents")));
+        return handleRedirect("/main/index.html?id=" + contents.get("id"));
     }
 }

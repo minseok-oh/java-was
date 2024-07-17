@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import static codesquad.Main.sessionDatabase;
 import static codesquad.Main.userDatabase;
-import static codesquad.domain.entity.User.createUserInfo;
 
 public class LoginAPI implements ResourceHandler {
 
@@ -26,7 +25,7 @@ public class LoginAPI implements ResourceHandler {
     public HttpResponse handle(HttpRequest request) {
         if (request.getRequestStartLine().method() != HttpMethod.POST) throw new Http405Exception();
 
-        Map<String, String> userInfo = createUserInfo(request.getBody().toString());
+        Map<String, String> userInfo = request.getBody().getBodyMap();
         User user = userDatabase.getById(userInfo.get("userId"));
         if (!verifyUserInfo(user, userInfo)) return handleRedirect("/login/login_failed.html");
 
