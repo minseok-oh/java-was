@@ -9,13 +9,14 @@ import codesquad.http.element.HttpHeaders;
 import codesquad.http.element.ResponseBody;
 import codesquad.http.element.ResponseStartLine;
 import codesquad.http.exception.client.Http400Exception;
+import codesquad.security.SessionManager;
 
 import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import static codesquad.server.thread.ThreadManager.sessionVerified;
+import static codesquad.server.thread.ThreadManager.session;
 
 public class StaticResourceHandler implements ResourceHandler {
     private final Set<String> path = new HashSet<>() {{
@@ -26,7 +27,9 @@ public class StaticResourceHandler implements ResourceHandler {
     @Override
     public HttpResponse handle(final HttpRequest request) {
         URI uri = createVerifiedUri(request.getRequestStartLine().uri());
-        if (uri == null) return handleRedirect("/main/index.html");
+        if (uri == null) return handleRedirect("/main/index.html?id=1");
+        if (!SessionManager.isExist(session.get()) && uri.getPath().equals("/article/index.html")) return handleRedirect("/login/index.html");
+        if (uri.getPath().equals("/index.html") && uri.getQuery() == null) return handleRedirect("/index.html?id=1");
 
         ResponseStartLine responseStartLine = new ResponseStartLine(HttpVersion.HTTP_1_1, HttpStatus.OK);
         ResponseBody body = new ResponseBody(uri);
@@ -35,9 +38,10 @@ public class StaticResourceHandler implements ResourceHandler {
     }
 
     private URI createVerifiedUri(final URI uri) {
+        boolean sessionVerified = SessionManager.isExist(session.get());
         if (!path.contains(uri.getPath())) return uri;
-        if (!sessionVerified.get() && uri.getPath().equals("/main/index.html")) throw new Http400Exception();
-        if (sessionVerified.get() && uri.getPath().equals("/index.html")) return null;
+        if (!sessionVerified && uri.getPath().equals("/main/index.html")) throw new Http400Exception();
+        if (sessionVerified && uri.getPath().equals("/index.html")) return null;
         return uri;
     }
 

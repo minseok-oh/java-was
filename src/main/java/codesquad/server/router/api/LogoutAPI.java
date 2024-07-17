@@ -27,7 +27,7 @@ public class LogoutAPI implements ResourceHandler {
         if (sessionId == null && !SessionManager.isExist(session)) throw new Http400Exception();
 
         sessionDatabase.deleteById(session);
-        return handleRedirect("/index.html");
+        return handleRedirect("/index.html?id=1");
     }
 
     public HttpResponse handleRedirect(final String path) {

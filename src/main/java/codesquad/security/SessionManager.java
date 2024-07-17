@@ -1,9 +1,11 @@
 package codesquad.security;
 
 import codesquad.domain.entity.Session;
+import codesquad.domain.entity.User;
 import codesquad.http.HttpRequest;
 import codesquad.http.element.HttpHeader;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static codesquad.Main.sessionDatabase;
@@ -20,6 +22,8 @@ public class SessionManager {
     }
 
     public static boolean isExist(Session id) {
+        Map<Session, User> sessionUserMap = sessionDatabase.getAll();
+        if (sessionUserMap == null) return false;
         return sessionDatabase.getAll().containsKey(id);
     }
 }
