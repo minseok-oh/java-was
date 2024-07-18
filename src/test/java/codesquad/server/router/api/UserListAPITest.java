@@ -1,5 +1,6 @@
 package codesquad.server.router.api;
 
+import codesquad.domain.entity.User;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.constant.HttpMethod;
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static codesquad.server.thread.ThreadManager.sessionVerified;
+import static codesquad.Main.sessionDatabase;
+import static codesquad.server.thread.ThreadManager.session;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserListAPITest {
@@ -32,7 +34,7 @@ public class UserListAPITest {
                 null
         );
 
-        sessionVerified.set(true);
+        // sessionDatabase.append(session.get(), new User(null));
         HttpResponse httpResponse = userListAPI.handle(httpRequest);
         assertEquals(httpResponse.getHttpHeaders().getHeader("Location").toString(), "/user/index.html");
     }
@@ -46,7 +48,7 @@ public class UserListAPITest {
                 null
         );
 
-        sessionVerified.set(false);
+        // sessionVerified.set(false);
         HttpResponse httpResponse = userListAPI.handle(httpRequest);
         assertEquals(httpResponse.getHttpHeaders().getHeader("Location").toString(), "/login/index.html");
     }
