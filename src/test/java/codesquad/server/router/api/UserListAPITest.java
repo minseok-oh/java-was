@@ -1,6 +1,5 @@
 package codesquad.server.router.api;
 
-import codesquad.domain.entity.User;
 import codesquad.http.HttpRequest;
 import codesquad.http.HttpResponse;
 import codesquad.http.constant.HttpMethod;
@@ -13,8 +12,6 @@ import org.junit.jupiter.api.Test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static codesquad.Main.sessionDatabase;
-import static codesquad.server.thread.ThreadManager.session;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UserListAPITest {
