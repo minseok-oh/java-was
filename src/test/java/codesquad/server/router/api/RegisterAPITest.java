@@ -18,7 +18,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static codesquad.Main.userDatabase;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegisterAPITest {
