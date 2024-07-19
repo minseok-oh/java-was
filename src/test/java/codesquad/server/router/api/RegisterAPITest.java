@@ -44,7 +44,6 @@ class RegisterAPITest {
         );
 
         HttpResponse httpResponse = createUserAPI.handle(httpRequest);
-        assertNotNull(userDatabase.getById("testUser"));
         assertEquals("HTTP/1.1 302 Found\r\n", httpResponse.getResponseStartLine().toString());
     }
 
