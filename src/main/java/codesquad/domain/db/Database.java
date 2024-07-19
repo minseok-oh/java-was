@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -57,7 +58,7 @@ public interface Database<K, V> {
         Field[] fields = findFields();
         Constructor<V> constructor = (Constructor<V>) findConstructor();
 
-        Map<K, V> result = null;
+        Map<K, V> result = new HashMap<>();
         try (Connection connection = DatabaseSource.connect()) {
             String selectAllSQL = sqlGenerator.generateSelectAllSQL(className);
             ResultSet rs = sqlExecutor.executeSelectAll(connection, selectAllSQL);

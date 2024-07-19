@@ -24,6 +24,6 @@ public class SessionManager {
     public static boolean isExist(Session id) {
         Map<Session, User> sessionUserMap = sessionDatabase.selectAll();
         if (sessionUserMap == null) return false;
-        return sessionDatabase.selectAll().containsKey(id);
+        return sessionUserMap.containsKey(id);
     }
 }

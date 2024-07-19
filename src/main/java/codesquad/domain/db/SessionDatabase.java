@@ -4,11 +4,12 @@ import codesquad.domain.entity.Session;
 import codesquad.domain.entity.User;
 import codesquad.security.SessionManager;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SessionDatabase implements Database<Session, User> {
-    private final Map<Session, User> sessionDB = new ConcurrentHashMap<>();
+    private final Map<Session, User> sessionDB = new HashMap<>();
 
     @Override
     public Session insert(User data) {
