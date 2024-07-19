@@ -48,7 +48,10 @@ public class HttpGenerator {
                 throw new Http404Exception();
             }
         }
-        else fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + uri.getPath());
+        else {
+            fileInputStream = HttpGenerator.class.getResourceAsStream("/static" + uri.getPath());
+        }
+
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             if (fileInputStream == null) throw new Http404Exception();
 
